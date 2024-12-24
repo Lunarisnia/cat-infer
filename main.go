@@ -4,44 +4,180 @@ import (
 	"fmt"
 
 	"github.com/Lunarisnia/cat-infer/internal/fwc"
+	"github.com/Lunarisnia/cat-infer/internal/userio"
 )
+
+const furAndCoat = "Fur & Coat"
+
+const eyes = "Eyes"
+
+const ears = "Ears"
+
+const tail = "Tail"
+
+const build = "Build"
+
+const facialFeatures = "Facial Features"
+
+const behaviourAndTemprament = "Behaviour & Temprament"
+
+const uniqueTraits = "Unique Traits"
+
+const careNeeds = "Care Needs"
+
+const intelligence = "Intelligence & Communication"
+
+var categories = []string{
+	furAndCoat,
+	eyes,
+	ears,
+	tail,
+	build,
+	facialFeatures,
+	behaviourAndTemprament,
+	uniqueTraits,
+	careNeeds,
+	intelligence,
+}
+
+var factList map[string][]fwc.Fact = map[string][]fwc.Fact{
+	// Fur and Coat
+	furAndCoat: {
+		fwc.LongFur,
+		fwc.SemiLongHair,
+		fwc.ShortCoat,
+		fwc.LongShaggyCoat,
+		fwc.SpottedCoat,
+		fwc.MarbledCoat,
+		fwc.StripedCoat,
+		fwc.ShinyCoat,
+		fwc.TickedTabbyCoat,
+		fwc.Hairless,
+		fwc.WrinkledSkin,
+		fwc.ReddishCoat,
+		fwc.ThickFur,
+	},
+
+	// Eyes
+	eyes: {
+		fwc.RoundEyes,
+		fwc.LargeEyes,
+		fwc.BlueEyes,
+		fwc.AlmondEyes,
+	},
+
+	// Ears
+	ears: {
+		fwc.SmallEars,
+		fwc.TuftedEars,
+		fwc.FoldedEars,
+		fwc.LargeEars,
+	},
+
+	// Tail
+	tail: {
+		fwc.BushyTail,
+		fwc.ShortTail,
+		fwc.LongTail,
+	},
+
+	// Build
+	build: {
+		fwc.LargeSize,
+		fwc.SleekBody,
+		fwc.AthleticBuild,
+		fwc.MuscularBody,
+		fwc.LongLegs,
+		fwc.SlimBuild,
+	},
+
+	// Facial Features
+	facialFeatures: {
+		fwc.FlatFace,
+		fwc.RoundFace,
+		fwc.TearMarks,
+	},
+
+	// Behavior and Temperament
+	behaviourAndTemprament: {
+		fwc.Gentle,
+		fwc.LaidBack,
+		fwc.Friendly,
+		fwc.Social,
+		fwc.Affectionate,
+		fwc.Docile,
+		fwc.Playful,
+		fwc.Curious,
+		fwc.Active,
+		fwc.HighlyEnergetic,
+		fwc.Adaptable,
+		fwc.PeopleOriented,
+		fwc.LovesBeingHeld,
+		fwc.Solitary,
+	},
+
+	// Unique Traits
+	uniqueTraits: {
+		fwc.ColorPoints,
+		fwc.Mane,
+		fwc.LivesInPrides,
+		fwc.ColdAdapted,
+		fwc.ExcellentClimber,
+		fwc.FastestLandAnimal,
+	},
+
+	// Care Needs
+	careNeeds: {
+		fwc.HighMaintenance,
+		fwc.ModerateMaintenance,
+		fwc.LowMaintenance,
+	},
+
+	// Intelligence and Communication
+	intelligence: {
+		fwc.Vocal,
+		fwc.Intelligence,
+		fwc.Quiet,
+	},
+}
 
 func main() {
 	knownFacts := make([]fwc.Fact, 0)
-	knownFacts = append(knownFacts, fwc.Fact("BlackFooted"))
-	knownFacts = append(knownFacts, fwc.Fact("Small"))
-	knownFacts = append(knownFacts, fwc.Fact("RoundEyes"))
-	knownFacts = append(knownFacts, fwc.Fact("Cat"))
-
-	rules := make([]fwc.Rule, 0)
-	rules = append(rules, fwc.Rule{
-		Conditions: []fwc.Fact{"BlackFooted"},
-		Conclusion: "Cat",
-	})
-	rules = append(rules, fwc.Rule{
-		Conditions: []fwc.Fact{"Small", "SquareEyes"},
-		Conclusion: "MinecraftCat",
-	})
-	rules = append(rules, fwc.Rule{
-		Conditions: []fwc.Fact{"Small", "RoundEyes"},
-		Conclusion: "NaturallySmallCat",
-	})
-	rules = append(rules, fwc.Rule{
-		Conditions: []fwc.Fact{"NaturallySmallCat"},
-		Conclusion: "Cute",
-	})
-
-	newFacts := fwc.ForwardChaining(knownFacts, rules)
-
-	inferenceRule := make([]fwc.Rule, 0)
-	inferenceRule = append(inferenceRule, fwc.Rule{
-		Conditions: []fwc.Fact{"Cat", "Cute", "NaturallySmallCat", "RoundEyes"},
-		Conclusion: "Munchkin",
-	})
-
-	inferenceResult := fwc.ForwardChainingInference(newFacts, inferenceRule)
-	if inferenceResult == nil {
-		fmt.Println("Unindentifiable")
+	j := 0
+	for j < len(categories) {
+		cat := categories[j]
+		fmt.Println("Describe its", cat)
+		possibleChoice := make(map[string]struct {
+			Valid bool
+			Fact  fwc.Fact
+		})
+		for i, fact := range factList[cat] {
+			possibleChoice[fmt.Sprint(i+1)] = struct {
+				Valid bool
+				Fact  fwc.Fact
+			}{
+				Valid: true,
+				Fact:  fact,
+			}
+			fmt.Printf("\u2003%v. %v\n", i+1, fact)
+		}
+		fmt.Print("Input your choice (ex: 1): ")
+		choice, err := userio.ReadInput()
+		if err != nil {
+			panic(err)
+		}
+		if possibleChoice[choice].Valid {
+			j++
+			knownFacts = append(knownFacts, possibleChoice[choice].Fact)
+		} else {
+			fmt.Println("Invalid option, Try again.")
+		}
 	}
-	fmt.Println("Inference Result: ", *inferenceResult)
+	catSpecies := fwc.ForwardChainingInference(knownFacts, fwc.Cat)
+	if catSpecies == nil {
+		fmt.Println("Unidentifiable Species")
+		return
+	}
+	// TODO: What about instead of binary result we have a list of probabilities instead based on how many of the feature in the known fact matches then we choose the highest
+	fmt.Println("Cat Species:", catSpecies)
 }

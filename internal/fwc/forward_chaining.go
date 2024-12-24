@@ -32,12 +32,16 @@ func ForwardChaining(knownFacts []Fact, rules []Rule) []Fact {
 
 func ForwardChainingInference(knownFacts []Fact, inferenceRules []Rule) *Fact {
 	for _, r := range inferenceRules {
+		found := true
 		for _, cond := range r.Conditions {
 			if !containFact(knownFacts, cond) {
+				found = false
 				break
 			}
 		}
-		return &r.Conclusion
+		if found {
+			return &r.Conclusion
+		}
 	}
 	return nil
 }

@@ -8,30 +8,23 @@ import (
 func Test_ForwardChaining(t *testing.T) {
 	t.Run("Basic Rule", func(t *testing.T) {
 		knownFacts := make([]Fact, 0)
-		knownFacts = append(knownFacts, Fact("BlackFooted"))
-		knownFacts = append(knownFacts, Fact("Small"))
-		knownFacts = append(knownFacts, Fact("RoundEyes"))
-		knownFacts = append(knownFacts, Fact("Cat"))
+		knownFacts = append(knownFacts, Gentle)
+		knownFacts = append(knownFacts, LaidBack)
+		knownFacts = append(knownFacts, RoundEyes)
+		knownFacts = append(knownFacts, SmallEars)
+		knownFacts = append(knownFacts, BushyTail)
+		knownFacts = append(knownFacts, LargeSize)
+		knownFacts = append(knownFacts, RoundFace)
+		knownFacts = append(knownFacts, HighMaintenance)
+		knownFacts = append(knownFacts, Vocal)
 
-		rules := make([]Rule, 0)
-		rules = append(rules, Rule{
-			Conditions: []Fact{"BlackFooted"},
-			Conclusion: "Cat",
-		})
-		rules = append(rules, Rule{
-			Conditions: []Fact{"Small", "SquareEyes"},
-			Conclusion: "MinecraftCat",
-		})
-		rules = append(rules, Rule{
-			Conditions: []Fact{"Small", "RoundEyes"},
-			Conclusion: "NaturallySmallCat",
-		})
-		rules = append(rules, Rule{
-			Conditions: []Fact{"NaturallySmallCat"},
-			Conclusion: "Cute",
-		})
+		inferenceRule := Cat
 
-		newFacts := ForwardChaining(knownFacts, rules)
-		fmt.Println("New Facts: ", newFacts)
+		inferenceResult := ForwardChainingInference(knownFacts, inferenceRule)
+		if inferenceResult == nil {
+			fmt.Println("Unindentifiable")
+			return
+		}
+		fmt.Println("Inference Result: ", *inferenceResult)
 	})
 }
