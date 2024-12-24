@@ -45,3 +45,27 @@ func ForwardChainingInference(knownFacts []Fact, inferenceRules []Rule) *Fact {
 	}
 	return nil
 }
+
+type InferenceScore struct {
+	Score      float64
+	Conclusion Fact
+}
+
+type ScoreMap map[Fact]InferenceScore
+
+func ForwardChainingProbabilist(knownFacts []Fact, inferenceRules []Rule) ScoreMap {
+	scores := make(ScoreMap)
+	for _, r := range inferenceRules {
+		currentScore := InferenceScore{
+			Score:      0.0,
+			Conclusion: r.Conclusion,
+		}
+		for _, cond := range r.Conditions {
+			if containFact(knownFacts, cond) {
+				currentScore.Score += 1.0
+			}
+		}
+		scores[r.Conclusion] = currentScore
+	}
+	return scores
+}

@@ -63,12 +63,11 @@ const (
 	Solitary        Fact = "Solitary"
 
 	// Unique Traits
-	ColorPoints       Fact = "Color Points"
-	Mane              Fact = "Mane"
-	LivesInPrides     Fact = "Lives in Prides"
-	ColdAdapted       Fact = "Cold Adapted"
-	ExcellentClimber  Fact = "Excellent Climber"
-	FastestLandAnimal Fact = "Fastest Land Animal"
+	ColorPoints      Fact = "Color Points"
+	Mane             Fact = "Mane"
+	LivesInPrides    Fact = "Lives in Prides"
+	ColdAdapted      Fact = "Cold Adapted"
+	ExcellentClimber Fact = "Excellent Climber"
 
 	// Care Needs
 	HighMaintenance     Fact = "High Maintenance"

@@ -61,7 +61,7 @@ var leopard Rule = Rule{
 }
 
 var cheetah Rule = Rule{
-	Conditions: []Fact{SlimBuild, TearMarks, FastestLandAnimal, AlmondEyes, LargeEars, LongTail, Active, LowMaintenance, Quiet},
+	Conditions: []Fact{SlimBuild, TearMarks, ExcellentClimber, AlmondEyes, LargeEars, LongTail, Active, LowMaintenance, Quiet},
 	Conclusion: "Cheetah",
 }
 

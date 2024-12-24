@@ -123,7 +123,6 @@ var factList map[string][]fwc.Fact = map[string][]fwc.Fact{
 		fwc.LivesInPrides,
 		fwc.ColdAdapted,
 		fwc.ExcellentClimber,
-		fwc.FastestLandAnimal,
 	},
 
 	// Care Needs
@@ -173,11 +172,13 @@ func main() {
 			fmt.Println("Invalid option, Try again.")
 		}
 	}
-	catSpecies := fwc.ForwardChainingInference(knownFacts, fwc.Cat)
-	if catSpecies == nil {
-		fmt.Println("Unidentifiable Species")
-		return
+	mostConfident := fwc.InferenceScore{}
+	catSpecies := fwc.ForwardChainingProbabilist(knownFacts, fwc.Cat)
+	for _, prob := range catSpecies {
+		if mostConfident.Score < prob.Score {
+			mostConfident = prob
+		}
+		fmt.Printf("%s got Score: %v%% \n", prob.Conclusion, int((prob.Score/9.0)*100.0))
 	}
-	// TODO: What about instead of binary result we have a list of probabilities instead based on how many of the feature in the known fact matches then we choose the highest
-	fmt.Println("Cat Species:", catSpecies)
+	fmt.Println("It is likely that the cat you mean is:", mostConfident.Conclusion)
 }
